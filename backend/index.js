@@ -18,3 +18,5 @@ app.use('/photos', require('./controllers/photos.controller'))
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+exports.app = functions.https.onRequest(app);

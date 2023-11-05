@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deploy": "firebase deploy",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "files": ["index.js", "dist"],
+  "author": "Zaw",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/firestore": "^7.0.0",
