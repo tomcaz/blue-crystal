@@ -2,6 +2,14 @@ const { signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmai
 const { auth, firebaseAdmin } = require("../repo/firebase")
 const { getProfileByEmail, saveProfile } = require("../repo/profile.repo")
 const { getToken } = require("../util")
+const jwt = require('jsonwebtoken')
+const fs = require('fs')
+var algorithm = {
+    "algorithm": "RS256",
+}
+
+const privateKey = fs.readFileSync('./keys/private.key', 'utf8')
+const publicKey = fs.readFileSync('./keys/public.key', 'utf8')
 
 const login = async (req, res) => {
     const { username, password } = req.body
@@ -12,7 +20,14 @@ const login = async (req, res) => {
             res.send({
                 status: 'OK',
                 message: 'Authorized',
-                token: userCredential._tokenResponse,
+                token: {
+                    ...userCredential._tokenResponse,
+                    idToken: sign({
+                        ...(await validateFromServer(userCredential._tokenResponse.idToken)),
+                        // exp: 1695222597,
+                    })
+                },
+                // data: validateFromServer(validateFromServer(userCredential.idt))
                 userData: await getProfileByEmail(username)
             })
         } else {
@@ -77,17 +92,28 @@ const signup = async (req, res) => {
 
 const validate = async (req, res) => {
     try {
-
-        const { token } = req.body;
-        const data = await validateFromServer(token)
+        const { token } = req.body
+        const data = await validateLocal(token)
         if (data.email_verified) {
-            res.send({ status: "OK", data: data })
+            res.send({
+                status: "OK",
+                data: data
+
+            })
         } else {
 
         }
     } catch (error) {
+        console.error(error+''.indexOf('jwt expired') >= 0)
         res.send({ status: "Failed", message: error })
     }
+}
+
+const sign = (data) => jwt.sign(data, privateKey, algorithm);
+
+const validateLocal = (token) => {
+    const decoded = jwt.verify(token, publicKey);
+    return decoded
 }
 const validateFromServer = (token) => firebaseAdmin.auth().verifyIdToken(token, true);
 
@@ -97,7 +123,6 @@ const logout = async (req, res) => {
         token = getToken(headers.authorization)
         const data = await validateFromServer(token);
         await firebaseAdmin.auth().revokeRefreshTokens(data.sub, true);
-
     } catch (error) {
         res.send({ status: "Failed", message: error })
     }
@@ -110,12 +135,35 @@ const validateEmail = (email) => {
 };
 
 
-const refreshToken = async (req, res) => { }
+const refreshToken = async (req, res) => {
+    try {
+        const token = req.headers.authorization.substring(7);
+        let newToken;
+        try {
+            const result = jwt.decode(token);
+            newToken = sign({
+                ...result,
+                exp: parseInt((Date.now()/1000)+3600),
+                iat: parseInt(Date.now()/1000)
+            })
+        } catch (error) {
+            // throw Error('invalid token, not expired')
+        }
+        // can be fresh with or without expire but must valid
+        res.send({status: 'OK',idToken: newToken})
+    } catch (error) {
+        res.status(401).send({
+            ...error,
+            status: 'Failed',
+        })
+    }
+}
 
 module.exports = {
     login,
     refreshToken,
     passwordReset,
     signup, validate,
-    logout, validateFromServer
+    logout, validateFromServer : validateLocal,
+    validateLocal
 }
