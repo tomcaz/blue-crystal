@@ -3,7 +3,6 @@ import Auth from './pages/auth.page';
 import DefaultRoutes from './components/routes';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from './utils/constants';
 import { setSessionData } from './slicers/session.slice';
 import { getUserInfo } from './api/profile';
 import { message } from 'antd';
@@ -16,7 +15,7 @@ function App() {
 
   const dispatch = useDispatch();
   const userSession = useSelector((state) => state.session.userData)
-  const emailAddress = userSession && userSession.signup ? userSession.signup.emailAddress : ''
+  const emailAddress = userSession && userSession.signup ? userSession.signup.emailAddress : '';
 
   useEffect(() => {
     if (Object(userSession) && token) {

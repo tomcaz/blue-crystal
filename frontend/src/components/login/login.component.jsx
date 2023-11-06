@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Row, message } from "antd"
-import { forgetPassword, login } from "../../api/login";
+import { forgetPassword } from "../../api/login";
 import { useAuth } from "../../providers/auth.provider";
 import { useDispatch } from "react-redux";
 import { getUserInfo } from "../../api/profile";
 import { setSessionData } from "../../slicers/session.slice";
 import axios from "axios";
+import { login } from "../../api/fetch";
 
 const Login = () => {
     const { setToken } = useAuth()
