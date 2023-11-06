@@ -2,9 +2,8 @@
 
 import { useSelector } from "react-redux";
 import { useAuth } from "../providers/auth.provider"
-import { Button, Card, Col, Divider, Empty, Flex, Row, Statistic } from "antd";
+import { Col, Empty, Row } from "antd";
 import { useNavigate } from "react-router-dom";
-import { TYPE_PARENT, isUserRole } from "../utils/constants";
 import Search from "antd/es/input/Search";
 
 const EventHistory = () => {

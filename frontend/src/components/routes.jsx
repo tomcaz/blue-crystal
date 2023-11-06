@@ -8,12 +8,13 @@ import Organizations from '../pages/orgs.page';
 import AddOrganization from '../pages/add-org.page';
 import EventHistory from '../pages/event-history.page';
 import Event from '../pages/event.page';
+import AddEvent from '../pages/add-event.page';
 
 
 const DefaultRoutes = () => (
     <Routes>
         <Route path="/" element={<DefaultLayout />}>
-            <Route path="home" element={<Home />} />
+            <Route path="" element={<Home />} />
             <Route path="account" element={<Account />} />
             <Route path="children" element={<Children />} />
             <Route path="editChild/:id" element={<AddChild />} />
@@ -23,6 +24,7 @@ const DefaultRoutes = () => (
             <Route path="editOrg/:id" element={<AddOrganization />} />
             <Route path="eventHistory" element={<EventHistory />} />
             <Route path="event" element={<Event />} />
+            <Route path="addEvent" element={<AddEvent />} />
         </Route>
     </Routes>
 )

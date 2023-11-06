@@ -23,7 +23,7 @@ const DefaultLayout = () => {
   const clickMenu = ({ key }) => {
     // "Home", "Account", "Children", "Event History", "Event", "Logout"
     if (key === "home") {
-      navigate('/home');
+      navigate('/');
     } else if (key === "account") {
       navigate('/account');
     } else if (key === "children") {

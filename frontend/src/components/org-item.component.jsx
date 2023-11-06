@@ -1,4 +1,4 @@
-import { DeleteOutlined, FormOutlined, PlusOutlined, TeamOutlined } from "@ant-design/icons"
+import { FormOutlined, TeamOutlined } from "@ant-design/icons"
 import { Avatar, Button, Col, Row } from "antd"
 import { useNavigate } from "react-router-dom"
 import { isEmptyObject } from "../utils/constants"
@@ -26,7 +26,7 @@ const OrganizationItem = ({ org: { name, id, year, rank } }) => {
             </Row>
             <Row>
                 <Col>
-                    <Button type="primary" onClick={() => navigate(`/editOrg/${id}`)}> <PlusOutlined />Check</Button>
+                    <Button type="primary" onClick={() => navigate(`/editOrg/${id}`)}> Check</Button>
                     <Button type="text" warn onClick={() => navigate(`/editOrg/${id}`)}>{<FormOutlined />}</Button>
                     {/* <Button type="text" danger>{<DeleteOutlined />}</Button> */}
                 </Col>

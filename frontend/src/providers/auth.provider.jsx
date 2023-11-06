@@ -4,6 +4,7 @@ import AuthContext from "../contexts/auth";
 import { useCookies } from "react-cookie";
 import { logout, validate } from "../api/login";
 import { Spin } from 'antd';
+import { updateToken } from "../api/fetch";
 
 
 const AuthProvider = ({ children }) => {
@@ -17,6 +18,7 @@ const AuthProvider = ({ children }) => {
       validate(idToken).then(data => {
         if (data.data.status === 'OK') {
           setToken_(idToken)
+          updateToken(idToken)
         } else {
           removeCookie('token')
         }
@@ -42,14 +44,6 @@ const AuthProvider = ({ children }) => {
     logout()
     setToken(undefined)
   }
-
-  useEffect(() => {
-    if (token) {
-      // axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  }, [token]);
 
   // Memoized value of the authentication context
   const contextValue = useMemo(
